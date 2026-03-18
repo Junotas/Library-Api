@@ -1,6 +1,7 @@
 package com.ludvig.libraryapi.service;
 
 import com.ludvig.libraryapi.dto.BorrowerDto;
+import com.ludvig.libraryapi.dto.BorrowerRequest;
 import com.ludvig.libraryapi.entity.Borrower;
 import com.ludvig.libraryapi.repository.BorrowerRepository;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,13 @@ public class BorrowerService {
   public BorrowerDto findById(Long id) {
     Borrower borrower = borrowerRepository.findById(id).orElseThrow();
     return new BorrowerDto(borrower.getId(), borrower.getName(), borrower.getEmail());
+  }
+
+  public BorrowerDto save(BorrowerRequest request) {
+    Borrower borrower = new Borrower();
+    borrower.setName(request.name());
+    borrower.setEmail(request.email());
+    Borrower saved = borrowerRepository.save(borrower);
+    return new BorrowerDto(saved.getId(), saved.getName(), saved.getEmail());
   }
 }

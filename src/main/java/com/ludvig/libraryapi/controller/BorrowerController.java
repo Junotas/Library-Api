@@ -1,6 +1,7 @@
 package com.ludvig.libraryapi.controller;
 
 import com.ludvig.libraryapi.dto.BorrowerDto;
+import com.ludvig.libraryapi.dto.BorrowerRequest;
 import com.ludvig.libraryapi.service.BorrowerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,10 @@ public class BorrowerController {
   @GetMapping("/{id}")
   public ResponseEntity<BorrowerDto> findById(@PathVariable Long id) {
     return ResponseEntity.ok(borrowerService.findById(id));
+  }
+
+  @PostMapping
+  public ResponseEntity<BorrowerDto> save(@RequestBody BorrowerRequest request) {
+    return ResponseEntity.status(201).body(borrowerService.save(request));
   }
 }
