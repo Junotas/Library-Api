@@ -1,6 +1,7 @@
 package com.ludvig.libraryapi.controller;
 
 import com.ludvig.libraryapi.dto.LoanDto;
+import com.ludvig.libraryapi.dto.LoanRequest;
 import com.ludvig.libraryapi.service.LoanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,10 @@ public class LoanController {
   @GetMapping("/{id}")
   public ResponseEntity<LoanDto> findById(@PathVariable Long id) {
     return ResponseEntity.ok(loanService.findById(id));
+  }
+
+  @PostMapping
+  public ResponseEntity<LoanDto> save(@RequestBody LoanRequest request) {
+    return ResponseEntity.status(201).body(loanService.save(request));
   }
 }
