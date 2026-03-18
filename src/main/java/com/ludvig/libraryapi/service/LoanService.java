@@ -5,6 +5,7 @@ import com.ludvig.libraryapi.dto.LoanRequest;
 import com.ludvig.libraryapi.entity.Book;
 import com.ludvig.libraryapi.entity.Borrower;
 import com.ludvig.libraryapi.entity.Loan;
+import com.ludvig.libraryapi.exception.ResourceNotFoundException;
 import com.ludvig.libraryapi.repository.BookRepository;
 import com.ludvig.libraryapi.repository.BorrowerRepository;
 import com.ludvig.libraryapi.repository.LoanRepository;
@@ -41,14 +42,27 @@ public class LoanService {
   }
 
   public LoanDto findById(Long id) {
-    Loan loan = loanRepository.findById(id).orElseThrow();
+    Loan loan =
+        loanRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found with id: " + id));
     return new LoanDto(
         loan.getId(), loan.getLoanDate(), loan.getBook().getId(), loan.getBorrower().getId());
   }
 
   public LoanDto save(LoanRequest request) {
-    Book book = bookRepository.findById(request.bookId()).orElseThrow();
-    Borrower borrower = borrowerRepository.findById(request.borrowerId()).orElseThrow();
+    Book book =
+        bookRepository
+            .findById(request.bookId())
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Book not found with id: " + request.bookId()));
+    Borrower borrower =
+        borrowerRepository
+            .findById(request.borrowerId())
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Borrower not found with id: " + request.borrowerId()));
     Loan loan = new Loan();
     loan.setLoanDate(request.loanDate());
     loan.setBook(book);
@@ -59,9 +73,22 @@ public class LoanService {
   }
 
   public LoanDto update(Long id, LoanRequest request) {
-    Loan loan = loanRepository.findById(id).orElseThrow();
-    Book book = bookRepository.findById(request.bookId()).orElseThrow();
-    Borrower borrower = borrowerRepository.findById(request.borrowerId()).orElseThrow();
+    Loan loan =
+        loanRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Loan not found with id: " + id));
+    Book book =
+        bookRepository
+            .findById(request.bookId())
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Book not found with id: " + request.bookId()));
+    Borrower borrower =
+        borrowerRepository
+            .findById(request.borrowerId())
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Borrower not found with id: " + request.borrowerId()));
     loan.setLoanDate(request.loanDate());
     loan.setBook(book);
     loan.setBorrower(borrower);

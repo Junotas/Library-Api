@@ -3,6 +3,7 @@ package com.ludvig.libraryapi.service;
 import com.ludvig.libraryapi.dto.AuthorDto;
 import com.ludvig.libraryapi.dto.AuthorRequest;
 import com.ludvig.libraryapi.entity.Author;
+import com.ludvig.libraryapi.exception.ResourceNotFoundException;
 import com.ludvig.libraryapi.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,10 @@ public class AuthorService {
   }
 
   public AuthorDto findById(Long id) {
-    Author author = authorRepository.findById(id).orElseThrow();
+    Author author =
+        authorRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
     return new AuthorDto(author.getId(), author.getName());
   }
 
@@ -36,7 +40,10 @@ public class AuthorService {
   }
 
   public AuthorDto update(Long id, AuthorRequest request) {
-    Author author = authorRepository.findById(id).orElseThrow();
+    Author author =
+        authorRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Author not found with id: " + id));
     author.setName(request.name());
     Author saved = authorRepository.save(author);
     return new AuthorDto(saved.getId(), saved.getName());

@@ -4,6 +4,7 @@ import com.ludvig.libraryapi.dto.BookDto;
 import com.ludvig.libraryapi.dto.BookRequest;
 import com.ludvig.libraryapi.entity.Author;
 import com.ludvig.libraryapi.entity.Book;
+import com.ludvig.libraryapi.exception.ResourceNotFoundException;
 import com.ludvig.libraryapi.repository.AuthorRepository;
 import com.ludvig.libraryapi.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,21 @@ public class BookService {
   }
 
   public BookDto findById(Long id) {
-    Book book = bookRepository.findById(id).orElseThrow();
+    Book book =
+        bookRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
     return new BookDto(book.getId(), book.getTitle(), book.getAuthor().getId());
   }
 
   public BookDto save(BookRequest request) {
-    Author author = authorRepository.findById(request.authorId()).orElseThrow();
+    Author author =
+        authorRepository
+            .findById(request.authorId())
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Author not found with id: " + request.authorId()));
     Book book = new Book();
     book.setTitle(request.title());
     book.setAuthor(author);
@@ -42,8 +52,17 @@ public class BookService {
   }
 
   public BookDto update(Long id, BookRequest request) {
-    Book book = bookRepository.findById(id).orElseThrow();
-    Author author = authorRepository.findById(request.authorId()).orElseThrow();
+    Book book =
+        bookRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id: " + id));
+    Author author =
+        authorRepository
+            .findById(request.authorId())
+            .orElseThrow(
+                () ->
+                    new ResourceNotFoundException(
+                        "Author not found with id: " + request.authorId()));
     book.setTitle(request.title());
     book.setAuthor(author);
     Book saved = bookRepository.save(book);

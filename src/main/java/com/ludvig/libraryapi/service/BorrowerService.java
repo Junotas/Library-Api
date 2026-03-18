@@ -3,6 +3,7 @@ package com.ludvig.libraryapi.service;
 import com.ludvig.libraryapi.dto.BorrowerDto;
 import com.ludvig.libraryapi.dto.BorrowerRequest;
 import com.ludvig.libraryapi.entity.Borrower;
+import com.ludvig.libraryapi.exception.ResourceNotFoundException;
 import com.ludvig.libraryapi.repository.BorrowerRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,10 @@ public class BorrowerService {
   }
 
   public BorrowerDto findById(Long id) {
-    Borrower borrower = borrowerRepository.findById(id).orElseThrow();
+    Borrower borrower =
+        borrowerRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Borrower not found with id: " + id));
     return new BorrowerDto(borrower.getId(), borrower.getName(), borrower.getEmail());
   }
 
@@ -37,7 +41,10 @@ public class BorrowerService {
   }
 
   public BorrowerDto update(Long id, BorrowerRequest request) {
-    Borrower borrower = borrowerRepository.findById(id).orElseThrow();
+    Borrower borrower =
+        borrowerRepository
+            .findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Borrower not found with id: " + id));
     borrower.setName(request.name());
     borrower.setEmail(request.email());
     Borrower saved = borrowerRepository.save(borrower);
