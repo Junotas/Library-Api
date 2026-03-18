@@ -34,4 +34,15 @@ public class AuthorService {
     Author saved = authorRepository.save(author);
     return new AuthorDto(saved.getId(), saved.getName());
   }
+
+  public AuthorDto update(Long id, AuthorRequest request) {
+    Author author = authorRepository.findById(id).orElseThrow();
+    author.setName(request.name());
+    Author saved = authorRepository.save(author);
+    return new AuthorDto(saved.getId(), saved.getName());
+  }
+
+  public void delete(Long id) {
+    authorRepository.deleteById(id);
+  }
 }

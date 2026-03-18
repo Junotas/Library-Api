@@ -32,4 +32,16 @@ public class AuthorController {
   public ResponseEntity<AuthorDto> save(@RequestBody AuthorRequest request) {
     return ResponseEntity.status(201).body(authorService.save(request));
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<AuthorDto> update(
+      @PathVariable Long id, @RequestBody AuthorRequest request) {
+    return ResponseEntity.ok(authorService.update(id, request));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    authorService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
 }
