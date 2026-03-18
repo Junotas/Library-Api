@@ -1,7 +1,10 @@
 package com.ludvig.libraryapi.service;
 
 import com.ludvig.libraryapi.dto.BookDto;
+import com.ludvig.libraryapi.dto.BookRequest;
+import com.ludvig.libraryapi.entity.Author;
 import com.ludvig.libraryapi.entity.Book;
+import com.ludvig.libraryapi.repository.AuthorRepository;
 import com.ludvig.libraryapi.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +14,11 @@ import java.util.List;
 public class BookService {
 
   private final BookRepository bookRepository;
+  private final AuthorRepository authorRepository;
 
-  public BookService(BookRepository bookRepository) {
+  public BookService(BookRepository bookRepository, AuthorRepository authorRepository) {
     this.bookRepository = bookRepository;
+    this.authorRepository = authorRepository;
   }
 
   public List<BookDto> findAll() {
@@ -25,5 +30,14 @@ public class BookService {
   public BookDto findById(Long id) {
     Book book = bookRepository.findById(id).orElseThrow();
     return new BookDto(book.getId(), book.getTitle(), book.getAuthor().getId());
+  }
+
+  public BookDto save(BookRequest request) {
+    Author author = authorRepository.findById(request.authorId()).orElseThrow();
+    Book book = new Book();
+    book.setTitle(request.title());
+    book.setAuthor(author);
+    Book saved = bookRepository.save(book);
+    return new BookDto(saved.getId(), saved.getTitle(), saved.getAuthor().getId());
   }
 }
