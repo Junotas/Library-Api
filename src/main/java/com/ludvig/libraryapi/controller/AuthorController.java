@@ -1,6 +1,7 @@
 package com.ludvig.libraryapi.controller;
 
 import com.ludvig.libraryapi.dto.AuthorDto;
+import com.ludvig.libraryapi.dto.AuthorRequest;
 import com.ludvig.libraryapi.service.AuthorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,5 +26,10 @@ public class AuthorController {
   @GetMapping("/{id}")
   public ResponseEntity<AuthorDto> findById(@PathVariable Long id) {
     return ResponseEntity.ok(authorService.findById(id));
+  }
+
+  @PostMapping
+  public ResponseEntity<AuthorDto> save(@RequestBody AuthorRequest request) {
+    return ResponseEntity.status(201).body(authorService.save(request));
   }
 }
