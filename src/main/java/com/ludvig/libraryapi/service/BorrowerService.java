@@ -35,4 +35,16 @@ public class BorrowerService {
     Borrower saved = borrowerRepository.save(borrower);
     return new BorrowerDto(saved.getId(), saved.getName(), saved.getEmail());
   }
+
+  public BorrowerDto update(Long id, BorrowerRequest request) {
+    Borrower borrower = borrowerRepository.findById(id).orElseThrow();
+    borrower.setName(request.name());
+    borrower.setEmail(request.email());
+    Borrower saved = borrowerRepository.save(borrower);
+    return new BorrowerDto(saved.getId(), saved.getName(), saved.getEmail());
+  }
+
+  public void delete(Long id) {
+    borrowerRepository.deleteById(id);
+  }
 }

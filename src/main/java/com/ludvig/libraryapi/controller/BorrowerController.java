@@ -32,4 +32,16 @@ public class BorrowerController {
   public ResponseEntity<BorrowerDto> save(@RequestBody BorrowerRequest request) {
     return ResponseEntity.status(201).body(borrowerService.save(request));
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<BorrowerDto> update(
+      @PathVariable Long id, @RequestBody BorrowerRequest request) {
+    return ResponseEntity.ok(borrowerService.update(id, request));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    borrowerService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
 }
