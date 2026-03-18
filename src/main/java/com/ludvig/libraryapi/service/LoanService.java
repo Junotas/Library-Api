@@ -57,4 +57,20 @@ public class LoanService {
     return new LoanDto(
         saved.getId(), saved.getLoanDate(), saved.getBook().getId(), saved.getBorrower().getId());
   }
+
+  public LoanDto update(Long id, LoanRequest request) {
+    Loan loan = loanRepository.findById(id).orElseThrow();
+    Book book = bookRepository.findById(request.bookId()).orElseThrow();
+    Borrower borrower = borrowerRepository.findById(request.borrowerId()).orElseThrow();
+    loan.setLoanDate(request.loanDate());
+    loan.setBook(book);
+    loan.setBorrower(borrower);
+    Loan saved = loanRepository.save(loan);
+    return new LoanDto(
+        saved.getId(), saved.getLoanDate(), saved.getBook().getId(), saved.getBorrower().getId());
+  }
+
+  public void delete(Long id) {
+    loanRepository.deleteById(id);
+  }
 }

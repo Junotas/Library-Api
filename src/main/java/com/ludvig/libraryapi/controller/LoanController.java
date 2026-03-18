@@ -32,4 +32,15 @@ public class LoanController {
   public ResponseEntity<LoanDto> save(@RequestBody LoanRequest request) {
     return ResponseEntity.status(201).body(loanService.save(request));
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<LoanDto> update(@PathVariable Long id, @RequestBody LoanRequest request) {
+    return ResponseEntity.ok(loanService.update(id, request));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    loanService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
 }
