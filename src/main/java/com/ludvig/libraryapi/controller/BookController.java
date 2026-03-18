@@ -32,4 +32,15 @@ public class BookController {
   public ResponseEntity<BookDto> save(@RequestBody BookRequest request) {
     return ResponseEntity.status(201).body(bookService.save(request));
   }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookRequest request) {
+    return ResponseEntity.ok(bookService.update(id, request));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    bookService.delete(id);
+    return ResponseEntity.noContent().build();
+  }
 }

@@ -40,4 +40,17 @@ public class BookService {
     Book saved = bookRepository.save(book);
     return new BookDto(saved.getId(), saved.getTitle(), saved.getAuthor().getId());
   }
+
+  public BookDto update(Long id, BookRequest request) {
+    Book book = bookRepository.findById(id).orElseThrow();
+    Author author = authorRepository.findById(request.authorId()).orElseThrow();
+    book.setTitle(request.title());
+    book.setAuthor(author);
+    Book saved = bookRepository.save(book);
+    return new BookDto(saved.getId(), saved.getTitle(), saved.getAuthor().getId());
+  }
+
+  public void delete(Long id) {
+    bookRepository.deleteById(id);
+  }
 }
