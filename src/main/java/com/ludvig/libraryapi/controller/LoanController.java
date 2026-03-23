@@ -3,6 +3,7 @@ package com.ludvig.libraryapi.controller;
 import com.ludvig.libraryapi.dto.LoanDto;
 import com.ludvig.libraryapi.dto.LoanRequest;
 import com.ludvig.libraryapi.service.LoanService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,13 @@ public class LoanController {
   }
 
   @PostMapping
-  public ResponseEntity<LoanDto> save(@RequestBody LoanRequest request) {
+  public ResponseEntity<LoanDto> save(@RequestBody @Valid LoanRequest request) {
     return ResponseEntity.status(201).body(loanService.save(request));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<LoanDto> update(@PathVariable Long id, @RequestBody LoanRequest request) {
+  public ResponseEntity<LoanDto> update(
+      @PathVariable Long id, @RequestBody @Valid LoanRequest request) {
     return ResponseEntity.ok(loanService.update(id, request));
   }
 
