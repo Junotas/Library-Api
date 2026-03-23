@@ -3,6 +3,7 @@ package com.ludvig.libraryapi.controller;
 import com.ludvig.libraryapi.dto.BookDto;
 import com.ludvig.libraryapi.dto.BookRequest;
 import com.ludvig.libraryapi.service.BookService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,13 @@ public class BookController {
   }
 
   @PostMapping
-  public ResponseEntity<BookDto> save(@RequestBody BookRequest request) {
+  public ResponseEntity<BookDto> save(@RequestBody @Valid BookRequest request) {
     return ResponseEntity.status(201).body(bookService.save(request));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<BookDto> update(@PathVariable Long id, @RequestBody BookRequest request) {
+  public ResponseEntity<BookDto> update(
+      @PathVariable Long id, @RequestBody @Valid BookRequest request) {
     return ResponseEntity.ok(bookService.update(id, request));
   }
 
