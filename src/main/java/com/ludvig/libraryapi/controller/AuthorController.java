@@ -3,6 +3,7 @@ package com.ludvig.libraryapi.controller;
 import com.ludvig.libraryapi.dto.AuthorDto;
 import com.ludvig.libraryapi.dto.AuthorRequest;
 import com.ludvig.libraryapi.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +30,13 @@ public class AuthorController {
   }
 
   @PostMapping
-  public ResponseEntity<AuthorDto> save(@RequestBody AuthorRequest request) {
+  public ResponseEntity<AuthorDto> save(@RequestBody @Valid AuthorRequest request) {
     return ResponseEntity.status(201).body(authorService.save(request));
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<AuthorDto> update(
-      @PathVariable Long id, @RequestBody AuthorRequest request) {
+      @PathVariable Long id, @RequestBody @Valid AuthorRequest request) {
     return ResponseEntity.ok(authorService.update(id, request));
   }
 
