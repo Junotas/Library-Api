@@ -14,7 +14,7 @@ public class Borrower {
   private String name;
   private String email;
 
-  @OneToMany(mappedBy = "borrower")
+  @OneToMany(mappedBy = "borrower", fetch = FetchType.EAGER)
   private List<Loan> loans;
 
   public Long getId() {

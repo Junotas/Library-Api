@@ -6,9 +6,9 @@ import com.ludvig.libraryapi.entity.Book;
 import com.ludvig.libraryapi.entity.Borrower;
 import com.ludvig.libraryapi.entity.Loan;
 import com.ludvig.libraryapi.exception.ResourceNotFoundException;
-import com.ludvig.libraryapi.repository.BookRepository;
-import com.ludvig.libraryapi.repository.BorrowerRepository;
+import com.ludvig.libraryapi.mapper.LoanMapper;
 import com.ludvig.libraryapi.repository.LoanRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,28 +17,20 @@ import java.util.List;
 public class LoanService {
 
   private final LoanRepository loanRepository;
-  private final BookRepository bookRepository;
-  private final BorrowerRepository borrowerRepository;
+  private final BookService bookService;
+  private final BorrowerService borrowerService;
 
   public LoanService(
       LoanRepository loanRepository,
-      BookRepository bookRepository,
-      BorrowerRepository borrowerRepository) {
+      @Lazy BookService bookService,
+      @Lazy BorrowerService borrowerService) {
     this.loanRepository = loanRepository;
-    this.bookRepository = bookRepository;
-    this.borrowerRepository = borrowerRepository;
+    this.bookService = bookService;
+    this.borrowerService = borrowerService;
   }
 
   public List<LoanDto> findAll() {
-    return loanRepository.findAll().stream()
-        .map(
-            loan ->
-                new LoanDto(
-                    loan.getId(),
-                    loan.getLoanDate(),
-                    loan.getBook().getId(),
-                    loan.getBorrower().getId()))
-        .toList();
+    return loanRepository.findAll().stream().map(LoanMapper::toDto).toList();
   }
 
   public LoanDto findById(Long id) {
@@ -46,30 +38,18 @@ public class LoanService {
         loanRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Loan not found with id: " + id));
-    return new LoanDto(
-        loan.getId(), loan.getLoanDate(), loan.getBook().getId(), loan.getBorrower().getId());
+    return LoanMapper.toDto(loan);
   }
 
   public LoanDto save(LoanRequest request) {
-    Book book =
-        bookRepository
-            .findById(request.bookId())
-            .orElseThrow(
-                () -> new ResourceNotFoundException("Book not found with id: " + request.bookId()));
-    Borrower borrower =
-        borrowerRepository
-            .findById(request.borrowerId())
-            .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        "Borrower not found with id: " + request.borrowerId()));
+    Book book = bookService.findEntityById(request.bookId());
+    Borrower borrower = borrowerService.findEntityById(request.borrowerId());
     Loan loan = new Loan();
     loan.setLoanDate(request.loanDate());
     loan.setBook(book);
     loan.setBorrower(borrower);
     Loan saved = loanRepository.save(loan);
-    return new LoanDto(
-        saved.getId(), saved.getLoanDate(), saved.getBook().getId(), saved.getBorrower().getId());
+    return LoanMapper.toDto(saved);
   }
 
   public LoanDto update(Long id, LoanRequest request) {
@@ -77,24 +57,13 @@ public class LoanService {
         loanRepository
             .findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Loan not found with id: " + id));
-    Book book =
-        bookRepository
-            .findById(request.bookId())
-            .orElseThrow(
-                () -> new ResourceNotFoundException("Book not found with id: " + request.bookId()));
-    Borrower borrower =
-        borrowerRepository
-            .findById(request.borrowerId())
-            .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(
-                        "Borrower not found with id: " + request.borrowerId()));
+    Book book = bookService.findEntityById(request.bookId());
+    Borrower borrower = borrowerService.findEntityById(request.borrowerId());
     loan.setLoanDate(request.loanDate());
     loan.setBook(book);
     loan.setBorrower(borrower);
     Loan saved = loanRepository.save(loan);
-    return new LoanDto(
-        saved.getId(), saved.getLoanDate(), saved.getBook().getId(), saved.getBorrower().getId());
+    return LoanMapper.toDto(saved);
   }
 
   public void delete(Long id) {
