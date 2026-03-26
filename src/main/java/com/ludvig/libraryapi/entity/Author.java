@@ -13,7 +13,7 @@ public class Author {
 
   private String name;
 
-  @OneToMany(mappedBy = "author")
+  @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
   private List<Book> books;
 
   public Long getId() {
