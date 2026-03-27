@@ -8,7 +8,6 @@ import com.ludvig.libraryapi.entity.Loan;
 import com.ludvig.libraryapi.exception.ResourceNotFoundException;
 import com.ludvig.libraryapi.mapper.LoanMapper;
 import com.ludvig.libraryapi.repository.LoanRepository;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +20,7 @@ public class LoanService {
   private final BorrowerService borrowerService;
 
   public LoanService(
-      LoanRepository loanRepository,
-      @Lazy BookService bookService,
-      @Lazy BorrowerService borrowerService) {
+      LoanRepository loanRepository, BookService bookService, BorrowerService borrowerService) {
     this.loanRepository = loanRepository;
     this.bookService = bookService;
     this.borrowerService = borrowerService;

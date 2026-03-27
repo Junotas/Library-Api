@@ -7,7 +7,6 @@ import com.ludvig.libraryapi.entity.Book;
 import com.ludvig.libraryapi.exception.ResourceNotFoundException;
 import com.ludvig.libraryapi.mapper.BookMapper;
 import com.ludvig.libraryapi.repository.BookRepository;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class BookService {
   private final BookRepository bookRepository;
   private final AuthorService authorService;
 
-  public BookService(BookRepository bookRepository, @Lazy AuthorService authorService) {
+  public BookService(BookRepository bookRepository, AuthorService authorService) {
     this.bookRepository = bookRepository;
     this.authorService = authorService;
   }

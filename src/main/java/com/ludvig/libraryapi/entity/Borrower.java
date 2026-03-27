@@ -45,7 +45,4 @@ public class Borrower {
     return loans;
   }
 
-  public void setLoans(List<Loan> loans) {
-    this.loans = loans;
-  }
 }
